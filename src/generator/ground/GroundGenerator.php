@@ -26,6 +26,7 @@ class GroundGenerator {
         $surfaceHeight = max(floor($surfaceNoise / 3.0 + 3.0 + $random->NextFloat() * 0.25), 1);
         $deep = -1;
 
+        // TODO: Move away from state ids maybe (unsure)
         $air = VanillaBlocks::AIR()->getStateId();
         $stone = VanillaBlocks::STONE()->getStateId();
         $sandstone = VanillaBlocks::SANDSTONE()->getStateId();

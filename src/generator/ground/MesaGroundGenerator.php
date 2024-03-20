@@ -8,6 +8,7 @@ use pocketmine\block\utils\DirtType;
 use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\ChunkManager;
+use pocketmine\world\World;
 
 class MesaGroundGenerator extends GroundGenerator
 {
@@ -148,10 +149,12 @@ class MesaGroundGenerator extends GroundGenerator
         $waterBlock = VanillaBlocks::WATER();
         $stillWaterBlock = VanillaBlocks::WATER()->getStillForm();
 
-        for ($y = 255; $y >= 0; --$y) {
+        // TODO: Test the World::Y_MAX thingy, bc it was 255 last time I checked
+        for ($y = World::Y_MAX; $y >= 0; --$y) {
             $chunk = $world->getChunk($x >> 4, $z >> 4);
-            $highest_block_at = $chunk->getHighestBlockAt($x, $z);
-            if ($y < (int) $bryceCanyonHeight && $world->getBlockAt($x, $y, $z)->hasSameTypeId($airBlock) && !($highest_block_at == $waterBlock || $highest_block_at == $stillWaterBlock)) {
+            $highest_block_at_y = $chunk->getHighestBlockAt($x & 0x0f, $z & 0x0f); // Returns just the y coordinate instead of the full block object
+            $highest_block_at = $world->getBlockAt($x, $highest_block_at_y, $z);
+            if ($y < (int) $bryceCanyonHeight && $world->getBlockAt($x, $y, $z)->hasSameTypeId($airBlock) && !($highest_block_at->isSameState($waterBlock) || $highest_block_at->isSameState($stillWaterBlock))) {
                 $world->setBlockAt($x, $y, $z, $stoneBlock);
             }
             if ($y <= $random->NextIntWithBound(5)) {

@@ -2,6 +2,7 @@
 
 namespace JonasWindmann\Giganilla\generator\populator\decorator\objects;
 
+use JonasWindmann\Giganilla\biome\BiomeClimate;
 use JonasWindmann\Giganilla\biome\BiomeList;
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\Block;
@@ -17,7 +18,7 @@ class Lake extends TerrainObjects {
     private Block $type; // Filling block (water/lava)
     private BlockTransaction $transaction;
 
-    public function __construct($block, $transaction) {
+    public function __construct(Block $block, BlockTransaction $transaction) {
         $this->type = $block;
         $this->transaction = $transaction;
     }
@@ -90,8 +91,11 @@ class Lake extends TerrainObjects {
                         }
                     } elseif ($y == (self::LAKE_MAX_HEIGHT / 2 - 1)) {
                         $biome = $biomeArray->get($x & 0x0f, $z & 0x0f);
-                        if ($this->type->getStateId() == $stillWater->getStateId() && BiomeClimate::isCold($biome, $sourceX + $x, $y, $sourceZ + $z)) {
-                            $this->type = MCBlock::getBlockFromStateId(BlockIds::ICE);
+
+                        // StateId does make sence here because still water is a subform of the water block
+                        //                   V                            V
+                        if ($this->type->getStateId() == $stillWater->getStateId() && BiomeClimate::getInstance()->IsCold($biome, $sourceX + $x, $y, $sourceZ + $z)) {
+                            $this->type = VanillaBlocks::ICE();
                         }
                     }
 
@@ -109,8 +113,8 @@ class Lake extends TerrainObjects {
 
                     $block = $world->getBlockAt($sourceX + $x, $sourceY + $y - 1, $sourceZ + $z);
                     $blockAbove = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
-                    if ($block->getTypeId() == BlockIds::DIRT && $blockAbove->isTransparent() && $blockAbove->getLightLevel() > 0) {
-                        $this->transaction->addBlockAt($sourceX + $x, $sourceY + $y - 1, $sourceZ + $z, $mycel_biome ? MCBlock::getBlockFromStateId(BlockIds::MYCELIUM) : MCBlock::getBlockFromStateId(BlockIds::GRASS));
+                    if ($block->hasSameTypeId(VanillaBlocks::DIRT()) && $blockAbove->isTransparent() && $blockAbove->getLightLevel() > 0) {
+                        $this->transaction->addBlockAt($sourceX + $x, $sourceY + $y - 1, $sourceZ + $z, $mycel_biome ? VanillaBlocks::MYCELIUM() : VanillaBlocks::GRASS());
                     }
                 }
             }
@@ -119,4 +123,43 @@ class Lake extends TerrainObjects {
         return $succeeded;
     }
 
+    private function isLakeBlock(array &$lakeMap, int $x, int $y, int $z): bool {
+        return in_array((($x * self::LAKE_MAX_DIAMETER + $z) * self::LAKE_MAX_HEIGHT + $y), $lakeMap);
+    }
+
+    private function setLakeBlock(array &$lakeMap, int $x, int $y, int $z): void {
+        $lakeMap[] = (($x * self::LAKE_MAX_DIAMETER + $z) * self::LAKE_MAX_HEIGHT + $y);
+    }
+
+    public function canPlace(array &$lakeMap, ChunkManager $world, int $sourceX, int $sourceY, int $sourceZ): bool {
+        for ($x = 0; $x < self::LAKE_MAX_DIAMETER; ++$x) {
+            for ($z = 0; $z < self::LAKE_MAX_DIAMETER; ++$z) {
+                for ($y = 0; $y < self::LAKE_MAX_HEIGHT; ++$y) {
+
+                    if ($this->isLakeBlock($lakeMap, $x, $y, $z)
+                        || (($x >= (self::LAKE_MAX_DIAMETER - 1) || !$this->isLakeBlock($lakeMap, $x + 1, $y, $z))
+                            && ($x <= 0 || !$this->isLakeBlock($lakeMap, $x - 1, $y, $z))
+                            && ($z >= (self::LAKE_MAX_DIAMETER - 1) || !$this->isLakeBlock($lakeMap, $x, $y, $z + 1))
+                            && ($z <= 0 || !$this->isLakeBlock($lakeMap, $x, $y, $z - 1))
+                            && ($y >= (self::LAKE_MAX_HEIGHT - 1) || !$this->isLakeBlock($lakeMap, $x, $y + 1, $z))
+                            && ($y <= 0 || !$this->isLakeBlock($lakeMap, $x, $y - 1, $z)))) {
+                        continue;
+                    }
+
+                    $block = $world->getBlockAt($sourceX + $x, $sourceY + $y, $sourceZ + $z);
+
+                    // TODO: Here was an isLiquid call but was replaced by two checks for water and lava (should work like in the other cases...?)
+                    if ($y >= self::LAKE_MAX_HEIGHT / 2 && ($block->hasSameTypeId(VanillaBlocks::WATER()) || $block->hasSameTypeId(VanillaBlocks::LAVA()) || $block->hasSameTypeId(VanillaBlocks::ICE()))) {
+                        return false; // there's already some liquids above
+                    }
+
+                    if ($y < self::LAKE_MAX_HEIGHT / 2 && !$block->isSolid() && $block->getTypeId() != $this->type->getTypeId()) {
+                        return false; // bottom must be solid and do not overlap with another liquid type
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 }

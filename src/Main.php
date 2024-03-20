@@ -17,6 +17,9 @@ class Main extends PluginBase{
     // When using block type then it does not make a difference
     // I understand now lol
 
+    // Small update, im very unsure about the BlockTypeIds because in an older project i var_dumped them and it just returned 0 for all blocks
+    // Lemme see where that takes us lol
+
     public function onLoad(): void
     {
         GeneratorManager::getInstance()->addGenerator(Giganilla::class, "giganilla", fn () => null);

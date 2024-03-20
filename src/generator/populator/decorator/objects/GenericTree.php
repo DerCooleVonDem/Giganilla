@@ -82,7 +82,7 @@ class GenericTree extends TerrainObjects {
     public function replaceIfAirOrLeaves(int $x, int $y, int $z, Block $newBlock, ChunkManager $world): void
     {
         $oldBlock = $world->getBlockAt($x, $y, $z);
-        if ($oldBlock->hasSameTypeId(VanillaBlocks::AIR()) || in_array($oldBlock->getStateId(), [VanillaBlocks::ACACIA_LEAVES()->getStateId(), VanillaBlocks::BIRCH_LEAVES()->getStateId(), VanillaBlocks::DARK_OAK_LEAVES()->getStateId(), VanillaBlocks::JUNGLE_LEAVES()->getStateId(), VanillaBlocks::OAK_LEAVES()->getStateId(), VanillaBlocks::SPRUCE_LEAVES()->getStateId()])) {
+        if ($oldBlock->hasSameTypeId(VanillaBlocks::AIR()) || in_array($oldBlock->getTypeId(), [VanillaBlocks::ACACIA_LEAVES()->getTypeId(), VanillaBlocks::BIRCH_LEAVES()->getTypeId(), VanillaBlocks::DARK_OAK_LEAVES()->getTypeId(), VanillaBlocks::JUNGLE_LEAVES()->getTypeId(), VanillaBlocks::OAK_LEAVES()->getTypeId(), VanillaBlocks::SPRUCE_LEAVES()->getTypeId()])) {
             $this->transaction->addBlockAt($x, $y, $z, $newBlock);
         }
     }
