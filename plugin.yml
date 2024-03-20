@@ -1,0 +1,7 @@
+---
+name: Giganilla
+version: 0.0.1
+main: JonasWindmann\Giganilla\Main
+api: 5.12.1
+src-namespace-prefix: JonasWindmann\Giganilla
+...
