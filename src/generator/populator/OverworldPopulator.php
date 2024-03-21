@@ -98,7 +98,9 @@ class OverworldPopulator
     public function Populate(ChunkManager $world, GigaRandom $random, int $chunkX, int $chunkZ): void
     {
         $chunk = $world->GetChunk($chunkX, $chunkZ);
-        $biome = $chunk->GetBiomeArray()->Get(8, 8);
+        $subChunk = $chunk->GetSubChunk(0);
+        // TODO: Like I said, this api change has huge potential for three dimensional biomes like a DEEP DARK biome etc.
+        $biome = $subChunk->GetBiomeArray()->Get(8, 8);
 
         if (isset($this->biomePopulators[$biome])) {
             $this->biomePopulators[$biome]->Populate($world, $random, $chunkX, $chunkZ);

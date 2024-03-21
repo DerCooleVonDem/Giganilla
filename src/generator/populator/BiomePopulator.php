@@ -16,7 +16,9 @@ use JonasWindmann\Giganilla\generator\populator\decorator\SugarCaneDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\TallGrassDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\TreeDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\UnderwaterDecorator;
+use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\world\ChunkManager;
 
 class BiomePopulator implements IPopulator {
 
@@ -113,7 +115,7 @@ class BiomePopulator implements IPopulator {
         return BiomeList::$ALL_BIOMES;
     }
 
-    public function Populate($world, $random, $chunkX, $chunkZ): void
+    public function Populate(ChunkManager $world, GigaRandom $random, int $chunkX, int $chunkZ): void
     {
         $this->waterLakeDecorator->Populate($world, $random, $chunkX, $chunkZ);
         $this->lavaLakeDecorator->Populate($world, $random, $chunkX, $chunkZ);
@@ -125,7 +127,7 @@ class BiomePopulator implements IPopulator {
         $this->OnGroundPopulation($world, $random, $chunkX, $chunkZ);
     }
 
-    public function OnGroundPopulation($world, $random, $chunkX, $chunkZ): void
+    public function OnGroundPopulation(ChunkManager $world, GigaRandom $random, int $chunkX, int $chunkZ): void
     {
         $this->doublePlantDecorator->Populate($world, $random, $chunkX, $chunkZ);
         $this->treeDecorator->Populate($world, $random, $chunkX, $chunkZ);
