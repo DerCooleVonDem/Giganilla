@@ -3,11 +3,16 @@
 namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\populator\decorator\CactusDecorator;
+use JonasWindmann\Giganilla\generator\populator\decorator\DeadBushDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\DoublePlantDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\FlowerDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\LakeDecorator;
+use JonasWindmann\Giganilla\generator\populator\decorator\MushroomDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\BigOakTree;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\GenericTree;
+use JonasWindmann\Giganilla\generator\populator\decorator\PumpkinDecorator;
+use JonasWindmann\Giganilla\generator\populator\decorator\SugarCaneDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\TallGrassDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\TreeDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\UnderwaterDecorator;
@@ -28,12 +33,12 @@ class BiomePopulator implements IPopulator {
     private FlowerDecorator $flowerDecorator;
     private TallGrassDecorator $tallGrassDecorator;
     private DeadBushDecorator $deadBushDecorator;
-    private BrownMushroomDecorator $brownMushroomDecorator;
-    private RedMushroomDecorator $redMushroomDecorator;
+    private MushroomDecorator $brownMushroomDecorator;
+    private MushroomDecorator $redMushroomDecorator;
     private SugarCaneDecorator $sugarCaneDecorator;
     private PumpkinDecorator $pumpkinDecorator;
     private CactusDecorator $cactusDecorator;
-    private OreDecorator $orePopulator;
+    private OrePopulator $orePopulator;
 
     public function __construct() {
         $this->bigOakTree = new BigOakTree();
@@ -49,12 +54,12 @@ class BiomePopulator implements IPopulator {
         $this->flowerDecorator = new FlowerDecorator();
         $this->tallGrassDecorator = new TallGrassDecorator();
         $this->deadBushDecorator = new DeadBushDecorator();
-        $this->brownMushroomDecorator = new BrownMushroomDecorator();
-        $this->redMushroomDecorator = new RedMushroomDecorator();
+        $this->brownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
+        $this->redMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
         $this->sugarCaneDecorator = new SugarCaneDecorator();
         $this->pumpkinDecorator = new PumpkinDecorator();
         $this->cactusDecorator = new CactusDecorator();
-        $this->orePopulator = new OreDecorator();
+        $this->orePopulator = new OrePopulator();
 
         $this->InitPopulators();
     }
