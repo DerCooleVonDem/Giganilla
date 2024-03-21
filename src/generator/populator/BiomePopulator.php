@@ -4,9 +4,11 @@ namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\biome\BiomeList;
 use JonasWindmann\Giganilla\generator\populator\decorator\DoublePlantDecorator;
+use JonasWindmann\Giganilla\generator\populator\decorator\FlowerDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\LakeDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\BigOakTree;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\GenericTree;
+use JonasWindmann\Giganilla\generator\populator\decorator\TallGrassDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\TreeDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\UnderwaterDecorator;
 use pocketmine\block\VanillaBlocks;

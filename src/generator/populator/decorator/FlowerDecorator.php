@@ -2,6 +2,7 @@
 
 namespace JonasWindmann\Giganilla\generator\populator\decorator;
 
+use JonasWindmann\Giganilla\generator\populator\decorator\objects\Flower;
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\Block;
 use pocketmine\world\ChunkManager;
