@@ -3,8 +3,12 @@
 namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\populator\decorator\DoublePlantDecorator;
+use JonasWindmann\Giganilla\generator\populator\decorator\LakeDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\BigOakTree;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\GenericTree;
+use JonasWindmann\Giganilla\generator\populator\decorator\TreeDecorator;
+use JonasWindmann\Giganilla\generator\populator\decorator\UnderwaterDecorator;
 use pocketmine\block\VanillaBlocks;
 
 class BiomePopulator implements IPopulator {
@@ -12,11 +16,11 @@ class BiomePopulator implements IPopulator {
     private BigOakTree $bigOakTree;
     private GenericTree $genericTree;
 
-    private WaterLakeDecorator $waterLakeDecorator;
-    private LavaLakeDecorator $lavaLakeDecorator;
-    private SandPatchDecorator $sandPatchDecorator;
-    private ClayPatchDecorator $clayPatchDecorator;
-    private GravelPatchDecorator $gravelPatchDecorator;
+    private LakeDecorator $waterLakeDecorator;
+    private LakeDecorator $lavaLakeDecorator;
+    private UnderwaterDecorator $sandPatchDecorator;
+    private UnderwaterDecorator $clayPatchDecorator;
+    private UnderwaterDecorator $gravelPatchDecorator;
     private DoublePlantDecorator $doublePlantDecorator;
     private TreeDecorator $treeDecorator;
     private FlowerDecorator $flowerDecorator;
@@ -33,11 +37,11 @@ class BiomePopulator implements IPopulator {
         $this->bigOakTree = new BigOakTree();
         $this->genericTree = new GenericTree();
 
-        $this->waterLakeDecorator = new WaterLakeDecorator();
-        $this->lavaLakeDecorator = new LavaLakeDecorator();
-        $this->sandPatchDecorator = new SandPatchDecorator();
-        $this->clayPatchDecorator = new ClayPatchDecorator();
-        $this->gravelPatchDecorator = new GravelPatchDecorator();
+        $this->waterLakeDecorator = new LakeDecorator(VanillaBlocks::WATER(), 4);
+        $this->lavaLakeDecorator = new LakeDecorator(VanillaBlocks::LAVA(), 8, 8);
+        $this->sandPatchDecorator = new UnderwaterDecorator(VanillaBlocks::SAND());
+        $this->clayPatchDecorator = new UnderwaterDecorator(VanillaBlocks::CLAY());
+        $this->gravelPatchDecorator = new UnderwaterDecorator(VanillaBlocks::GRAVEL());
         $this->doublePlantDecorator = new DoublePlantDecorator();
         $this->treeDecorator = new TreeDecorator();
         $this->flowerDecorator = new FlowerDecorator();
