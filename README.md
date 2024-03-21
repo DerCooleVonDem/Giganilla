@@ -1,5 +1,8 @@
 # Giganilla (Active Development Preview)
 
+![Giganilla Banner](https://github.com/DerCooleVonDem/Giganilla/blob/main/repoassets/Giganilla%20Banner.png?raw=true)
+
+
 ## THIS CODE CURRENTLY DOES NOT COMPILE! DONT DO ISSUES ABOUT MISSING IMPLEMENTATIONS!
 
 A vanilla-near world generator for pocketmine-mp v5. Keep in mind that this project is still under development and is not fully optimized, but further improvements are planned.
