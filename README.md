@@ -1,7 +1,7 @@
 ![Giganilla Banner](https://github.com/DerCooleVonDem/Giganilla/blob/main/repoassets/Giganilla%20Banner.png?raw=true)
 
 # Giganilla (Active Development Preview)
-https://dcbadge.vercel.app/api/server/nhFa79HAHc?style=plastic
+![](https://dcbadge.vercel.app/api/server/nhFa79HAHc?style=plastic)
 
 ## THIS CODE CURRENTLY DOES NOT COMPILE! DONT DO ISSUES ABOUT MISSING IMPLEMENTATIONS!
 
