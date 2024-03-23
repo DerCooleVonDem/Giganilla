@@ -22,6 +22,7 @@ use JonasWindmann\Giganilla\noise\octave\SimplexOctaveGenerator;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\ChunkManager;
 use pocketmine\world\generator\Generator;
+use pocketmine\world\World;
 
 class Giganilla extends Generator
 {
@@ -46,7 +47,7 @@ class Giganilla extends Generator
     const IS_UHC = false; // TODO: Remove later bc this is just debug!
 
     private bool $isUHC;
-    private array $mapLayer;
+    private MapLayerPair $mapLayer;
     private GigaRandom $ownRandom; // $random
     private GigaRandom $octaveRandom;
     private WorldOctaves $octaves;
@@ -153,36 +154,243 @@ class Giganilla extends Generator
 
     public function generateChunk(ChunkManager $world, int $chunkX, int $chunkZ): void
     {
+        $read = $this->mapLayer->highResolution->generateValues($chunkX * 16, $chunkZ * 16, 16, 16);
 
+        $this->generateChunkData($world, $chunkX, $chunkZ, new VanillaBiomeGrid($read));
+
+        $this->caveGenerator->generate($world, $this->ownRandom, $chunkX, $chunkZ, $world->getChunk($chunkX, $chunkZ));
     }
 
     public function populateChunk(ChunkManager $world, int $chunkX, int $chunkZ): void
     {
+        $this->populators->Populate($world, $this->ownRandom, $chunkX, $chunkZ);
+    }
 
+    private function GenerateChunkData(ChunkManager $world, int $chunkX, int $chunkZ, VanillaBiomeGrid $biome): void
+    {
+        $this->generateRawTerrain($world, $chunkX, $chunkZ);
+
+        $cx = $chunkX << 4;
+        $cz = $chunkZ << 4;
+
+        $octaveGenerator = $this->octaves->surface;
+        $sizeX = $octaveGenerator->getSizeX();
+        $sizeZ = $octaveGenerator->getSizeZ();
+
+        $surfaceNoise = $octaveGenerator->getFractalBrownianMotion($cx, 0.0, $cz, 0.5, 0.5);
+
+        $chunk = $world->getChunk($chunkX, $chunkZ);
+
+        for ($x = 0; $x < $sizeX; ++$x) {
+            for ($z = 0; $z < $sizeZ; ++$z) {
+                $id = $biome->getBiome($x, $z);
+
+                if ($this->isUHC && ($id == 0 || $id == 6 || $id == 10 || ($id >= 21 && $id <= 24) || ($id >= 32 && $id <= 33) || $id == 134
+                        || $id == 149 || $id == 151 || $id == 160 || $id == 161)) {
+                    $id = 132;
+                }
+
+                for($y = World::Y_MIN; $y < World::Y_MAX; $y++){
+                    $chunk->setBiomeId($x, $y, $z, $id);
+                }
+
+                $found = false;
+                foreach ($this->groundMap as $mappings) {
+                    $biomes = $mappings['first'];
+                    if (in_array($id, $biomes)) {
+                        $mappings['second']->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $this->defaultGenerator->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+                }
+            }
+        }
+    }
+
+    private function GenerateRawTerrain(ChunkManager $world, int $chunkX, int $chunkZ): void{
+        $density = $this->generateTerrainDensity($chunkX, $chunkZ);
+
+        $seaLevel = 64;
+
+        $fill = abs(self::DENSITY_FILL_MODE);
+        $seaFill = self::DENSITY_FILL_SEA_MODE;
+        $densityOffset = self::DENSITY_FILL_OFFSET;
+
+        $stillWater = VanillaBlocks::WATER()->getStillForm();
+        $water = VanillaBlocks::WATER();
+        $stone = VanillaBlocks::STONE();
+
+        $chunk = $world->getChunk($chunkX, $chunkZ);
+        for ($i = 0; $i < 5 - 1; ++$i) {
+            for ($j = 0; $j < 5 - 1; ++$j) {
+                for ($k = 0; $k < 33 - 1; ++$k) {
+                    $d1 = $density[$this->densityHash($i, $j, $k)];
+                    $d2 = $density[$this->densityHash($i + 1, $j, $k)];
+                    $d3 = $density[$this->densityHash($i, $j + 1, $k)];
+                    $d4 = $density[$this->densityHash($i + 1, $j + 1, $k)];
+                    $d5 = ($density[$this->densityHash($i, $j, $k + 1)] - $d1) / 8;
+                    $d6 = ($density[$this->densityHash($i + 1, $j, $k + 1)] - $d2) / 8;
+                    $d7 = ($density[$this->densityHash($i, $j + 1, $k + 1)] - $d3) / 8;
+                    $d8 = ($density[$this->densityHash($i + 1, $j + 1, $k + 1)] - $d4) / 8;
+
+                    for ($l = 0; $l < 8; ++$l) {
+                        $d9 = $d1;
+                        $d10 = $d3;
+
+                        $yPos = $l + ($k << 3);
+                        $yBlockPos = $yPos & 0xf;
+                        $subChunk = $chunk->getSubChunk($yPos >> 4);
+                        for ($m = 0; $m < 4; ++$m) {
+                            $dens = $d9;
+                            for ($n = 0; $n < 4; ++$n) {
+                                if ($fill == 1 || $fill == 10 || $fill == 13 || $fill == 16) {
+                                    $subChunk->setBlockStateId($m + ($i << 2), $yBlockPos, $n + ($j << 2), $water->getStateId());
+                                } elseif ($fill == 2 || $fill == 9 || $fill == 12 || $fill == 15) {
+                                    $subChunk->setBlockStateId($m + ($i << 2), $yBlockPos, $n + ($j << 2), $stone->getStateId());
+                                }
+
+                                if (($dens > $densityOffset && $fill > -1) || ($dens <= $densityOffset && $fill < 0)) {
+                                    if ($fill == 0 || $fill == 3 || $fill == 6 || $fill == 9 || $fill == 12) {
+                                        $subChunk->setBlockStateId($m + ($i << 2), $yBlockPos, $n + ($j << 2), $stone->getStateId());
+                                    } elseif ($fill == 2 || $fill == 7 || $fill == 10 || $fill == 16) {
+                                        $subChunk->setBlockStateId($m + ($i << 2), $yBlockPos, $n + ($j << 2), $stillWater->getStateId());
+                                    }
+                                } elseif (($yPos < $seaLevel - 1 && $seaFill == 0) || ($yPos >= $seaLevel - 1 && $seaFill == 1)) {
+                                    if ($fill == 0 || $fill == 3 || $fill == 7 || $fill == 10 || $fill == 13) {
+                                        $subChunk->setBlockStateId($m + ($i << 2), $yBlockPos, $n + ($j << 2), $stillWater->getStateId());
+                                    } elseif ($fill == 1 || $fill == 6 || $fill == 9 || $fill == 15) {
+                                        $subChunk->setBlockStateId($m + ($i << 2), $yBlockPos, $n + ($j << 2), $stone->getStateId());
+                                    }
+                                }
+
+                                $dens += ($d10 - $d9) / 4;
+                            }
+
+                            $d9 += ($d2 - $d1) / 4;
+                            $d10 += ($d4 - $d3) / 4;
+                        }
+
+                        $d1 += $d5;
+                        $d3 += $d7;
+                        $d2 += $d6;
+                        $d4 += $d8;
+                    }
+                }
+            }
+        }
     }
 
     private function GenerateTerrainDensity(int $x, int $z): array
     {
-        // Implement terrain density generation logic here
-        return []; // Return an associative array representing TerrainDensity
+        $density = []; // TODO: TerrainDensity type
+
+        // Scaling chunk x and z coordinates (4x)
+        $x <<= 2;
+        $z <<= 2;
+
+        // Assuming mapLayer_.lowResolution->GenerateValues returns a 2D array
+        $biomeGrid = $this->mapLayer->lowResolution->generateValues($x, $z, 10, 10);
+
+        // Assuming octaves_ is an object with height, roughness, roughness2, and detail properties
+        // Each property is an object with a GetFractalBrownianMotion method
+        $heightNoise = $this->octaves->height->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+        $roughnessNoise = $this->octaves->roughness->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+        $roughnessNoise2 = $this->octaves->roughness2->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+        $detailNoise = $this->octaves->detail->getFractalBrownianMotion($x, 0, $z, 0.5, 2.0);
+
+        $index = 0;
+        $indexHeight = 0;
+
+        for ($i = 0; $i < 5; ++$i) {
+            for ($j = 0; $j < 5; ++$j) {
+                $avgHeightScale = 0.0;
+                $avgHeightBase = 0.0;
+                $totalWeight = 0.0;
+
+                $biome = $biomeGrid[$i + 2 + ($j + 2) * 10];
+                $biomeHeight = BiomeHeightManager::get($biome);
+
+                for ($m = 0; $m < 5; ++$m) {
+                    for ($n = 0; $n < 5; ++$n) {
+                        $nearBiome = $biomeGrid[$i + $m + ($j + $n) * 10];
+                        $nearBiomeHeight = BiomeHeightManager::get($nearBiome);
+
+                        $heightBase = self::BIOME_HEIGHT_OFFSET + $nearBiomeHeight->height * self::BIOME_HEIGHT_WEIGHT;
+                        $heightScale = self::BIOME_SCALE_OFFSET + $nearBiomeHeight->scale * self::BIOME_SCALE_WEIGHT;
+
+                        $weight = $this->elevationWeight[elevationWeightHash($m, $n)] / ($heightBase + 2.0);
+                        if ($nearBiomeHeight->height > $biomeHeight->height) {
+                            $weight *= 0.5;
+                        }
+
+                        $avgHeightScale += $heightScale * $weight;
+                        $avgHeightBase += $heightBase * $weight;
+                        $totalWeight += $weight;
+                    }
+                }
+
+                $avgHeightScale /= $totalWeight;
+                $avgHeightBase /= $totalWeight;
+                $avgHeightScale = $avgHeightScale * 0.9 + 0.1;
+                $avgHeightBase = ($avgHeightBase * 4.0 - 1.0) / 8.0;
+
+                $noiseH = $heightNoise[$indexHeight++] / 8000.0;
+                if ($noiseH < 0) {
+                    $noiseH = -$noiseH * 0.3;
+                }
+
+                $noiseH = $noiseH * 3.0 - 2.0;
+                if ($noiseH < 0) {
+                    $noiseH = max($noiseH * 0.5, -1.0) / 1.4 * 0.5;
+                } else {
+                    $noiseH = min($noiseH, 1.0) / 8.0;
+                }
+
+                $noiseH = ($noiseH * 0.2 + $avgHeightBase) * self::BASE_SIZE / 8.0 * 4.0 + self::BASE_SIZE;
+                for ($k = 0; $k < 33; ++$k) {
+                    $nh = ($k - $noiseH) * self::STRETCH_Y * 128.0 / 256.0 / $avgHeightScale;
+                    if ($nh < 0.0) {
+                        $nh *= 4.0;
+                    }
+
+                    $noiseR = $roughnessNoise[$index] / 512.0;
+                    $noiseR2 = $roughnessNoise2[$index] / 512.0;
+                    $noiseD = ($detailNoise[$index] / 10.0 + 1.0) / 2.0;
+
+                    $dens = $noiseD < 0 ? $noiseR : ($noiseD > 1 ? $noiseR2 : $noiseR + ($noiseR2 - $noiseR) * $noiseD);
+                    $dens -= $nh;
+                    ++$index;
+                    if ($k > 29) {
+                        $lowering = ($k - 29) / 3.0;
+                        $dens = $dens * (1.0 - $lowering) + -10.0 * $lowering;
+                    }
+                    $density[$this->densityHash($i, $j, $k)] = $dens;
+                }
+            }
+        }
+        return $density;
     }
 
-    private function GenerateChunkData(ChunkManager $world, int $x, int $z, int $biome) {
-        // Implement chunk data generation logic here
-    }
-
-    private function GenerateRawTerrain(ChunkManager $world, int $x, int $z) {
-        // Implement raw terrain generation logic here
-    }
-
-    // TODO: Types!!!!
-    private function DensityHash($i, $j, $k): float
+    private function DensityHash(int $i, int $j, int $k): float
     {
-        // Implement density hash logic here
-        return 0; // Placeholder return value
+        return ($k << 6) | ($j << 3) | $i;
     }
 
     public function ElevationWeightHash(int $x, int $z): int {
         return ($x << 3) | $z;
+    }
+
+    public function __destruct()
+    {
+        $this->elevationWeight->clear();
+        unset($this->groundMap);
+
+        $this->mapLayer->highResolution->clear();
+        $this->mapLayer->lowResolution->clear();
     }
 }

@@ -9,7 +9,6 @@ use JonasWindmann\Giganilla\generator\populator\decorator\objects\TallGrass;
 use JonasWindmann\Giganilla\GigaRandom;
 use JonasWindmann\Giganilla\noise\octave\SimplexOctaveGenerator;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\data\bedrock\BiomeIds;
 use pocketmine\world\ChunkManager;
 
 class PlainsPopulator extends BiomePopulator {

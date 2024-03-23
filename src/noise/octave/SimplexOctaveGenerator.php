@@ -10,6 +10,7 @@ class SimplexOctaveGenerator extends ScalableOctaves {
     private float $sizeX;
     private float $sizeY;
     private float $sizeZ;
+
     public function __construct(GigaRandom $random, int $octavesNum, float $sizeXv, float $sizeYv, float $sizeZv) {
         for ($i = 0; $i < $octavesNum; ++$i) {
             $simplex = new SimplexNoise($random);
@@ -68,5 +69,29 @@ class SimplexOctaveGenerator extends ScalableOctaves {
         }
 
         return $result;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSizeX(): float
+    {
+        return $this->sizeX;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSizeY(): float
+    {
+        return $this->sizeY;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSizeZ(): float
+    {
+        return $this->sizeZ;
     }
 }
