@@ -1,7 +1,7 @@
-# Giganilla (Active Development Preview)
-
 ![Giganilla Banner](https://github.com/DerCooleVonDem/Giganilla/blob/main/repoassets/Giganilla%20Banner.png?raw=true)
 
+# Giganilla (In Development)
+![](https://dcbadge.vercel.app/api/server/nhFa79HAHc?style=plastic)
 
 ## THIS CODE CURRENTLY DOES NOT COMPILE! DONT DO ISSUES ABOUT MISSING IMPLEMENTATIONS!
 
@@ -13,5 +13,8 @@ Because I saw a lot of small servers switching away from pocketmine-mp even if t
 I want to provide an easy to use solution for all people using pocketmine-mp, by adding a vanilla-like world without the need to rebuild binarys and modifing pocketmine-mp internals.
 All of this should lower the entry barrier to pocketmine-mp and retain the old community and allow more vanilla-like gamemode being implemented using pocketmine-mp. 
 
-  *This project contains code that is based of the code of the NetherGamesMC ext-vanillagenerator, served under MIT, just like this project.
-   More Infos about their project: https://github.com/NetherGamesMC/ext-vanillagenerator (written in C++)
+
+*This project contains code that is based of the code of the NetherGamesMC ext-vanillagenerator, served under MIT, just like this project.
+ More Infos about their project: https://github.com/NetherGamesMC/ext-vanillagenerator (written in C++)
+
+(3-22-2024)
