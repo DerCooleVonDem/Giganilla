@@ -99,6 +99,7 @@ class OverworldPopulator
     {
         $chunk = $world->GetChunk($chunkX, $chunkZ);
         $subChunk = $chunk->GetSubChunk(0);
+        // Notice: We only have to get one slice of the subchunk because we setting the biome at the moment to be the same in all files -> take a look at Giganilla.php
         // TODO: Like I said, this api change has huge potential for three dimensional biomes like a DEEP DARK biome etc.
         $biome = $subChunk->GetBiomeArray()->Get(8, 8);
 

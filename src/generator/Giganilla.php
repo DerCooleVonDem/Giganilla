@@ -4,11 +4,13 @@ namespace JonasWindmann\Giganilla\generator;
 
 use JonasWindmann\Giganilla\biome\BiomeClimate;
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\carver\CaveCarver;
 use JonasWindmann\Giganilla\generator\ground\DirtAndStonePatchGroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\DirtPatchGroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\GravelPatchGroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\GroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\MesaGroundGenerator;
+use JonasWindmann\Giganilla\generator\ground\MesaType;
 use JonasWindmann\Giganilla\generator\ground\MycelGroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\RockyGroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\SandyGroundGenerator;
@@ -49,7 +51,6 @@ class Giganilla extends Generator
     private bool $isUHC;
     private MapLayerPair $mapLayer;
     private GigaRandom $ownRandom; // $random
-    private GigaRandom $octaveRandom;
     private WorldOctaves $octaves;
     private GroundGenerator $defaultGenerator;
     private OverworldPopulator $populators;
@@ -72,13 +73,29 @@ class Giganilla extends Generator
     {
         parent::__construct($seed, $preset);
 
+        // Ground generators
+        $this->defaultGenerator = new GroundGenerator();
+        $this->sandyGroundGenerator = new SandyGroundGenerator();
+        $this->rockyGroundGenerator = new RockyGroundGenerator();
+        $this->snowyGroundGenerator = new SnowyGroundGenerator();
+        $this->mycelGroundGenerator = new MycelGroundGenerator();
+        $this->stonePatchGroundGenerator = new StonePatchGroundGenerator();
+        $this->gravelPatchGroundGenerator = new GravelPatchGroundGenerator();
+        $this->dirtAndStonePatchGroundGenerator = new DirtAndStonePatchGroundGenerator();
+        $this->dirtPatchGroundGenerator = new DirtPatchGroundGenerator();
+        $this->defaultMesaGroundGenerator = new MesaGroundGenerator(MesaType::NORMAl);
+        $this->bryceMesaGroundGenerator = new MesaGroundGenerator(MesaType::BRYCE);
+        $this->forestMesaGroundGenerator = new MesaGroundGenerator(MesaType::FOREST_TYPE);
+
+        // Caves
+        $this->caveGenerator = new CaveCarver();
+
         $this->populators = new OverworldPopulator();
 
         $this->isUHC = self::IS_UHC;
         // Initialize other properties here
         // For example:
         $this->ownRandom = new GigaRandom($seed);
-        $this->octaveRandom = new GigaRandom($seed);
         $this->octaves = new WorldOctaves();
 
         $octaveRandom = new GigaRandom($seed);
@@ -323,7 +340,7 @@ class Giganilla extends Generator
                         $heightBase = self::BIOME_HEIGHT_OFFSET + $nearBiomeHeight->height * self::BIOME_HEIGHT_WEIGHT;
                         $heightScale = self::BIOME_SCALE_OFFSET + $nearBiomeHeight->scale * self::BIOME_SCALE_WEIGHT;
 
-                        $weight = $this->elevationWeight[elevationWeightHash($m, $n)] / ($heightBase + 2.0);
+                        $weight = $this->elevationWeight[$this->elevationWeightHash($m, $n)] / ($heightBase + 2.0);
                         if ($nearBiomeHeight->height > $biomeHeight->height) {
                             $weight *= 0.5;
                         }

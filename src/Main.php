@@ -20,6 +20,8 @@ class Main extends PluginBase{
     // Small update, im very unsure about the BlockTypeIds because in an older project i var_dumped them and it just returned 0 for all blocks
     // Lemme see where that takes us lol
 
+    // Still have to fix all the naming conventions to match php8 standards
+
     public function onLoad(): void
     {
         GeneratorManager::getInstance()->addGenerator(Giganilla::class, "giganilla", fn () => null);
