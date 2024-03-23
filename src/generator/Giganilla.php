@@ -387,7 +387,7 @@ class Giganilla extends Generator
 
     public function __destruct()
     {
-        $this->elevationWeight->clear();
+        unset($this->elevationWeight);
         unset($this->groundMap);
 
         $this->mapLayer->highResolution->clear();
