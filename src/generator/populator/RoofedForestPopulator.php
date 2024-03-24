@@ -3,7 +3,9 @@
 namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\populator\decorator\objects\BrownMushroomTree;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\DarkOakTree;
+use JonasWindmann\Giganilla\generator\populator\decorator\objects\RedMushroomTree;
 
 class RoofedForestPopulator extends ForestPopulator {
     private RedMushroomTree $redMushroomTree;

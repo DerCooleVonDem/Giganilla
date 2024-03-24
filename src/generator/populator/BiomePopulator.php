@@ -22,24 +22,24 @@ use pocketmine\world\ChunkManager;
 
 class BiomePopulator implements IPopulator {
 
-    private BigOakTree $bigOakTree;
+    protected BigOakTree $bigOakTree;
     private GenericTree $genericTree;
 
-    private LakeDecorator $waterLakeDecorator;
+    protected LakeDecorator $waterLakeDecorator;
     private LakeDecorator $lavaLakeDecorator;
     private UnderwaterDecorator $sandPatchDecorator;
     private UnderwaterDecorator $clayPatchDecorator;
     private UnderwaterDecorator $gravelPatchDecorator;
     protected DoublePlantDecorator $doublePlantDecorator;
     protected TreeDecorator $treeDecorator;
-    private FlowerDecorator $flowerDecorator;
+    protected FlowerDecorator $flowerDecorator;
     protected TallGrassDecorator $tallGrassDecorator;
-    private DeadBushDecorator $deadBushDecorator;
+    protected DeadBushDecorator $deadBushDecorator;
     private MushroomDecorator $brownMushroomDecorator;
     private MushroomDecorator $redMushroomDecorator;
-    private SugarCaneDecorator $sugarCaneDecorator;
+    protected SugarCaneDecorator $sugarCaneDecorator;
     private PumpkinDecorator $pumpkinDecorator;
-    private CactusDecorator $cactusDecorator;
+    protected CactusDecorator $cactusDecorator;
     private OrePopulator $orePopulator;
 
     public function __construct() {
