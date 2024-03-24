@@ -2,7 +2,6 @@
 
 namespace JonasWindmann\Giganilla\generator\populator\decorator\objects;
 
-use JonasWindmann\Giganilla\generator\populator\decorator\objects\TerrainObjects;
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\Block;
 use pocketmine\world\ChunkManager;

@@ -4,7 +4,6 @@ namespace JonasWindmann\Giganilla\generator\ground;
 
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\Block;
-use pocketmine\block\utils\DirtType;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\ChunkManager;
 

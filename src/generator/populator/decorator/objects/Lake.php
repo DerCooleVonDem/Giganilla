@@ -57,7 +57,7 @@ class Lake extends TerrainObjects {
 
         $chunk = $world->getChunk($sourceX >> 4, $sourceZ >> 4);
 
-        // TODO: Check if this is the correct way to get the biome, bc the biome array is not in the chunk class and was moved to the subchunk class (vertical biomes possible...?)
+        // TODO: Check if this is the correct way to get the biomegrid, bc the biomegrid array is not in the chunk class and was moved to the subchunk class (vertical biomes possible...?)
         $subChunk = $chunk->getSubChunk($sourceY >> 4);
         $biomeArray = $subChunk->getBiomeArray();
 
