@@ -27,9 +27,9 @@ class BiomePopulator implements IPopulator {
 
     protected LakeDecorator $waterLakeDecorator;
     private LakeDecorator $lavaLakeDecorator;
-    private UnderwaterDecorator $sandPatchDecorator;
+    protected UnderwaterDecorator $sandPatchDecorator;
     private UnderwaterDecorator $clayPatchDecorator;
-    private UnderwaterDecorator $gravelPatchDecorator;
+    protected UnderwaterDecorator $gravelPatchDecorator;
     protected DoublePlantDecorator $doublePlantDecorator;
     protected TreeDecorator $treeDecorator;
     protected FlowerDecorator $flowerDecorator;

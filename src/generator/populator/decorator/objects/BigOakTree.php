@@ -108,7 +108,7 @@ class BigOakTree extends GenericTree {
         $dy = $target->y / $maxDistance;
         $dz = $target->z / $maxDistance;
         for ($i = 0; $i <= $maxDistance; $i++, $n++) {
-            $target = $from->add((double) (0.5 + $i * $dx), 0.5 + $i * $dy, 0.5 + $i * $dz);
+            $target = $from->add((0.5 + $i * $dx), 0.5 + $i * $dy, 0.5 + $i * $dz);
             if ($target->getFloorY() < 0 || $target->getFloorY() > 255
                 || !in_array($world->getBlockAt($target->getFloorX(), $target->getFloorY(), $target->getFloorZ())->getTypeId(), $this->overrides)) {
                 return $n;

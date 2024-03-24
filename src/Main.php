@@ -22,10 +22,11 @@ class Main extends PluginBase{
 
     // Still have to fix all the naming conventions to match php8 standards
 
+    // Im done translating now i guess, 24.3.2024 7:46 PM
+
     public function onLoad(): void
     {
         GeneratorManager::getInstance()->addGenerator(Giganilla::class, "giganilla", fn () => null);
-        $this->getLogger()->info("(Dev) Registered the generator");
     }
 
     public function onEnable(): void

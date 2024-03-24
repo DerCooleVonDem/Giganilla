@@ -85,7 +85,7 @@ class MegaJungleTree extends GenericTree {
         return true;
     }
 
-    private function generateLeaves(int $sourceX, int $sourceY, int $sourceZ, int $radius, bool $odd, ChunkManager $world): void {
+    protected function generateLeaves(int $sourceX, int $sourceY, int $sourceZ, int $radius, bool $odd, ChunkManager $world): void {
         $n = $odd ? 0 : 1;
         for ($x = $sourceX - $radius; $x <= $sourceX + $radius + $n; $x++) {
             $radiusX = $x - $sourceX;
@@ -105,7 +105,7 @@ class MegaJungleTree extends GenericTree {
         }
     }
 
-    private function generateTrunk(ChunkManager $world, int $blockX, int $blockY, int $blockZ): void {
+    protected function generateTrunk(ChunkManager $world, int $blockX, int $blockY, int $blockZ): void {
         for ($y = 0; $y < $this->height + 1; $y++) {
             $this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ, $this->logType);
             $this->transaction->addBlockAt($blockX, $blockY + $y, $blockZ + 1, $this->logType);

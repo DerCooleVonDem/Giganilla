@@ -18,6 +18,7 @@ class PlainsPopulator extends BiomePopulator {
     private SimplexOctaveGenerator $noiseGen;
 
     public function __construct() {
+        parent::__construct();
         $this->internalRandom = new GigaRandom(2345);
         $this->noiseGen = new SimplexOctaveGenerator($this->internalRandom, 1, 0, 0, 0);
     }
