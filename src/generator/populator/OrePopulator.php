@@ -3,6 +3,7 @@
 namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\OreVein;
+use JonasWindmann\Giganilla\generator\populator\decorator\OreType;
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\ChunkManager;

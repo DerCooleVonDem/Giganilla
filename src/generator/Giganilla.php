@@ -5,6 +5,7 @@ namespace JonasWindmann\Giganilla\generator;
 use JonasWindmann\Giganilla\biome\BiomeClimate;
 use JonasWindmann\Giganilla\biome\BiomeHeightManager;
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\biomegrid\MapLayer;
 use JonasWindmann\Giganilla\generator\biomegrid\MapLayerPair;
 use JonasWindmann\Giganilla\generator\biomegrid\VanillaBiomeGrid;
 use JonasWindmann\Giganilla\generator\carver\CaveCarver;
@@ -111,6 +112,8 @@ class Giganilla extends Generator
         $biomeClimate = new BiomeClimate();
         $biomeClimate->Init($this->isUHC);
 
+        $this->mapLayer = MapLayer::initialize($seed, $this->isUHC);
+
         $this->octaves->height->SetXScale(self::HEIGHT_NOISE_SCALE_X);
         $this->octaves->height->SetYScale(self::HEIGHT_NOISE_SCALE_Z);
 
@@ -168,7 +171,7 @@ class Giganilla extends Generator
     public function insertGroundmap(array $biomeIds, GroundGenerator $generator): void
     {
         foreach ($biomeIds as $biomeId) {
-            $this->groundMap[$biomeId] = $generator;
+            $this->groundMap[$biomeId][] = $generator;
         }
     }
 
@@ -215,14 +218,17 @@ class Giganilla extends Generator
                 }
 
                 $found = false;
-                foreach ($this->groundMap as $mappings) {
-                    $biomes = $mappings['first'];
-                    if (in_array($id, $biomes)) {
-                        $mappings['second']->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
-
-                        $found = true;
-                        break;
-                    }
+                foreach ($this->groundMap as $key => $mappings) {
+                    $firstKey = array_key_first($mappings);
+                    $biomes = $mappings[$firstKey];
+                    $biomes->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+                    //var_dump($biomes);
+                    //if (in_array($id, (array)$biomes) && $biomes[$id] !== end($biomes)) {
+                    //    $biomes[2]->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+//
+                    //    $found = true;
+                    //    break;
+                    //}
                 }
 
                 if (!$found) {

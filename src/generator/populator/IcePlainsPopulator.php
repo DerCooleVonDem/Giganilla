@@ -8,12 +8,9 @@ use JonasWindmann\Giganilla\generator\populator\decorator\objects\RedwoodTree;
 class IcePlainsPopulator extends BiomePopulator {
     private RedwoodTree $redwoodTree;
 
-    public function __construct() {
-        parent::__construct();
-        $this->redwoodTree = new RedwoodTree();
-    }
-
     public function initPopulators(): void {
+        $this->redwoodTree = new RedwoodTree();
+
         $this->treeDecorator->setAmount(0);
         $this->treeDecorator->setTrees([
             [1, $this->redwoodTree]

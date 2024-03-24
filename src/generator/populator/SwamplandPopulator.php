@@ -17,6 +17,12 @@ class SwamplandPopulator extends BiomePopulator {
     private SwampTree $swampTree;
 
     public function initPopulators(): void {
+
+        $this->swamplandBrownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
+        $this->swamplandRedMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
+        $this->waterLilyDecorator = new WaterLilyDecorator();
+        $this->swampTree = new SwampTree();
+
         $this->sandPatchDecorator->setAmount(0);
         $this->gravelPatchDecorator->setAmount(2);
         $this->treeDecorator->setAmount(2);

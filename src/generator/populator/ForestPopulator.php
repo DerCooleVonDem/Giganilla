@@ -18,6 +18,9 @@ class ForestPopulator extends BiomePopulator {
 
     public function initPopulators(): void
     {
+        $this->genericTree = new GenericTree();
+        $this->birchTree = new BirchTree();
+
         if (empty(self::$blocks)) {
             self::$blocks = [
                 VanillaBlocks::LILAC(),

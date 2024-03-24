@@ -8,6 +8,8 @@ use JonasWindmann\Giganilla\generator\populator\decorator\objects\CocoaTree;
 
 class JungleEdgePopulator extends JunglePopulator {
     public function initPopulators(): void {
+        $this->cocoaTree = new CocoaTree();
+
         $this->treeDecorator->setAmount(2);
         $this->treeDecorator->setTrees([
             [10, BigOakTree::class],

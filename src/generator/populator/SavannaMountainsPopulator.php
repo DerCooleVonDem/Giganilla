@@ -13,6 +13,8 @@ class SavannaMountainsPopulator extends SavannaPopulator {
     private GenericTree $genericTree;
 
     public function initPopulators(): void {
+        $this->acaciaTree = new AcaciaTree();
+        $this->genericTree = new GenericTree();
         $this->treeDecorator->setAmount(2);
         $this->treeDecorator->setTrees([
             [4, $this->acaciaTree],

@@ -17,6 +17,11 @@ class TaigaPopulator extends BiomePopulator {
     private TallRedwoodTree $tallRedwoodTree;
 
     public function initPopulators(): void {
+        $this->taigaBrownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
+        $this->taigaRedMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
+        $this->redwoodTree = new RedwoodTree();
+        $this->tallRedwoodTree = new TallRedwoodTree();
+
         $this->doublePlantDecorator->setAmount(7);
         $this->doublePlantDecorator->setDoublePlants([
             [1, VanillaBlocks::LARGE_FERN()]

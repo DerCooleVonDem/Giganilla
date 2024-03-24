@@ -1,6 +1,6 @@
 <?php
 
-namespace JonasWindmann\Giganilla\generator\populator;
+namespace JonasWindmann\Giganilla\generator\populator\decorator;
 
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\block\Block;

@@ -3,14 +3,21 @@
 namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\populator\decorator\MushroomDecorator;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\MegaPineTree;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\MegaSpruceTree;
+use pocketmine\block\VanillaBlocks;
 
 class MegaTaigaPopulator extends TaigaPopulator {
     private MegaPineTree $megaPineTree;
     private MegaSpruceTree $megaSpruceTree;
 
     public function initPopulators(): void {
+        $this->taigaBrownMushroomDecorator = new MushroomDecorator(VanillaBlocks::BROWN_MUSHROOM());
+        $this->taigaRedMushroomDecorator = new MushroomDecorator(VanillaBlocks::RED_MUSHROOM());
+        $this->megaPineTree = new MegaPineTree();
+        $this->megaSpruceTree = new MegaSpruceTree();
+
         $this->treeDecorator->setAmount(10);
         $this->treeDecorator->setTrees([
             [52, MegaPineTree::class],

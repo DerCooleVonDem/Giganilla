@@ -3,9 +3,9 @@
 namespace JonasWindmann\Giganilla\noise\octave;
 
 class ScalableOctaves {
-    private float $xScale;
-    private float $yScale;
-    private float $zScale;
+    private float $xScale = 0;
+    private float $yScale = 0;
+    private float $zScale = 0;
 
     public function SetScale(float $scale): void
     {

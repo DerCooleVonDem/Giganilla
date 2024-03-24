@@ -12,16 +12,13 @@ class MegaSpruceTaigaPopulator extends MegaTaigaPopulator {
     private TallRedwoodTree $tallRedwoodTree;
     private MegaSpruceTree $megaSpruceTree;
 
-    public function __construct() {
-        parent::__construct();
+    public function initPopulators(): void {
+        parent::initPopulators();
 
         $this->redwoodTree = new RedwoodTree();
         $this->tallRedwoodTree = new TallRedwoodTree();
         $this->megaSpruceTree = new MegaSpruceTree();
-    }
 
-    public function initPopulators(): void {
-        parent::initPopulators();
         $this->treeDecorator->setTrees([
             [44, $this->redwoodTree],
             [22, $this->tallRedwoodTree],

@@ -6,19 +6,27 @@ class BiomeHeightManager {
     public static array $heights = [];
     public static array $defaultHeight = [0.1, 0.2];
 
+    public float $height;
+    public float $scale;
 
-    public static function Get(int $biome) {
+    public function __construct(float $height = 0, float $scale = 0) {
+        $this->height = $height;
+        $this->scale = $scale;
+    }
+
+    public static function Get(int $biome): BiomeHeightManager {
         if (array_key_exists($biome, self::$heights)) {
             return self::$heights[$biome];
         }
 
-        return self::$defaultHeight;
+        return new BiomeHeightManager(self::$defaultHeight[0], self::$defaultHeight[1]);
     }
 
     public static function RegisterBiome(array $climate, array $biomeIds): void
     {
+        $bhm = new BiomeHeightManager($climate[0], $climate[1]);
         foreach ($biomeIds as $biomeId) {
-            self::$heights[$biomeId] = $climate;
+            self::$heights[$biomeId] = $bhm;
         }
     }
 

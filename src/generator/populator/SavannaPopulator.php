@@ -11,13 +11,9 @@ class SavannaPopulator extends BiomePopulator {
     private AcaciaTree $acaciaTree;
     private GenericTree $genericTree;
 
-    public function __construct() {
-        parent::__construct();
+    public function initPopulators(): void {
         $this->acaciaTree = new AcaciaTree();
         $this->genericTree = new GenericTree();
-    }
-
-    public function initPopulators(): void {
         $this->doublePlantDecorator->setAmount(7);
         $this->doublePlantDecorator->setDoublePlants([
             [1, VanillaBlocks::DOUBLE_TALLGRASS()]

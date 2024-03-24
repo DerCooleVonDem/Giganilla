@@ -20,6 +20,12 @@ class JunglePopulator extends BiomePopulator {
 
     public function initPopulators(): void
     {
+        $this->decorator = new MelonDecorator();
+
+        $this->jungleBush = new JungleBush();
+        $this->megaJungleTree = new MegaJungleTree();
+        $this->cocoaTree = new CocoaTree();
+
         $this->treeDecorator->setAmount(65);
         $this->treeDecorator->setTrees([
             [10, $this->bigOakTree],
