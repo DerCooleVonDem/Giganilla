@@ -7,7 +7,6 @@ use JonasWindmann\Giganilla\generator\populator\decorator\DoublePlantDecorator;
 use pocketmine\block\VanillaBlocks;
 
 class SunflowerPlainsPopulator extends PlainsPopulator {
-    private $doublePlantDecorator;
 
     public function __construct() {
         parent::__construct();
