@@ -30,10 +30,10 @@ class BiomePopulator implements IPopulator {
     private UnderwaterDecorator $sandPatchDecorator;
     private UnderwaterDecorator $clayPatchDecorator;
     private UnderwaterDecorator $gravelPatchDecorator;
-    private DoublePlantDecorator $doublePlantDecorator;
-    private TreeDecorator $treeDecorator;
+    protected DoublePlantDecorator $doublePlantDecorator;
+    protected TreeDecorator $treeDecorator;
     private FlowerDecorator $flowerDecorator;
-    private TallGrassDecorator $tallGrassDecorator;
+    protected TallGrassDecorator $tallGrassDecorator;
     private DeadBushDecorator $deadBushDecorator;
     private MushroomDecorator $brownMushroomDecorator;
     private MushroomDecorator $redMushroomDecorator;

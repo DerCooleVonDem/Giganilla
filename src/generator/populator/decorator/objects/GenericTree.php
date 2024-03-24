@@ -10,11 +10,18 @@ use pocketmine\world\ChunkManager;
 use pocketmine\world\World;
 
 class GenericTree extends TerrainObjects {
-    private int $height = 0;
+    protected int $height = 0;
     protected BlockTransaction $transaction;
     protected array $overrides = [];
     protected Block $logType;
     protected Block $leavesTypes;
+
+    const MAGIC_NUMBER_OAK = 0;
+    const MAGIC_NUMBER_SPRUCE = 1;
+    const MAGIC_NUMBER_BIRCH = 2;
+    const MAGIC_NUMBER_JUNGLE = 3;
+    const MAGIC_NUMBER_ACACIA = 4;
+    const MAGIC_NUMBER_DARK_OAK = 5;
 
     public function __construct()
     {

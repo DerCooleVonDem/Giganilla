@@ -8,10 +8,10 @@ use pocketmine\block\Block;
 use pocketmine\world\ChunkManager;
 
 class DoublePlantDecorator extends Decorator {
-    private $decorations_ = [];
+    private $decorations = [];
 
     public function setDoublePlants(array $doublePlants): void {
-        $this->decorations_ = $doublePlants;
+        $this->decorations = $doublePlants;
     }
 
     public function decorate(ChunkManager $world, GigaRandom $random, int $chunkX, int $chunkZ): void {
@@ -30,10 +30,10 @@ class DoublePlantDecorator extends Decorator {
     }
 
     private function getRandomDoublePlant(GigaRandom $random): ?Block {
-        $totalWeight = array_sum(array_column($this->decorations_, 'weight'));
+        $totalWeight = array_sum(array_column($this->decorations, 'weight'));
 
         $weight = $random->nextIntWithBound($totalWeight);
-        foreach ($this->decorations_ as $deco) {
+        foreach ($this->decorations as $deco) {
             $weight -= $deco['weight'];
 
             if ($weight < 0) {

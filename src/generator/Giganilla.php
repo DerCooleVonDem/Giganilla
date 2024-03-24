@@ -3,8 +3,10 @@
 namespace JonasWindmann\Giganilla\generator;
 
 use JonasWindmann\Giganilla\biome\BiomeClimate;
+use JonasWindmann\Giganilla\biome\BiomeHeightManager;
 use JonasWindmann\Giganilla\biome\BiomeList;
 use JonasWindmann\Giganilla\generator\biomegrid\MapLayerPair;
+use JonasWindmann\Giganilla\generator\biomegrid\VanillaBiomeGrid;
 use JonasWindmann\Giganilla\generator\carver\CaveCarver;
 use JonasWindmann\Giganilla\generator\ground\DirtAndStonePatchGroundGenerator;
 use JonasWindmann\Giganilla\generator\ground\DirtPatchGroundGenerator;
