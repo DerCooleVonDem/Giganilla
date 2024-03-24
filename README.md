@@ -8,6 +8,8 @@
 A vanilla-near world generator for pocketmine-mp v5. Keep in mind that this project is still under development and is not fully optimized, but further improvements are planned.
 This project is based on the NetherGamesMC ext-vanillagenerator implementation.*
 
+**More updates:** Join the discord -> https://discord.gg/AFg5sTEmTh
+
 ### Why?
 Because I saw a lot of small servers switching away from pocketmine-mp even if the software is great, because of the lack of vanilla feature implementation.
 I want to provide an easy to use solution for all people using pocketmine-mp, by adding a vanilla-like world without the need to rebuild binarys and modifing pocketmine-mp internals.
