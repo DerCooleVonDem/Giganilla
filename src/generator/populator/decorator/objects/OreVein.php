@@ -2,7 +2,7 @@
 
 namespace JonasWindmann\Giganilla\generator\populator\decorator\objects;
 
-use JonasWindmann\Giganilla\generator\populator\OreType;
+use JonasWindmann\Giganilla\generator\populator\decorator\OreType;
 use JonasWindmann\Giganilla\GigaRandom;
 use pocketmine\world\ChunkManager;
 

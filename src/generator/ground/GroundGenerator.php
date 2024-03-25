@@ -13,6 +13,12 @@ class GroundGenerator {
     public Block $topMaterial;
     public Block $groundMaterial;
 
+    public function __construct()
+    {
+        $this->topMaterial = VanillaBlocks::GRASS();
+        $this->groundMaterial = VanillaBlocks::DIRT();
+    }
+
     public function GenerateTerrainColumn(ChunkManager $world, GigaRandom $random, int $x, int $z, int $biome, float $surfaceNoise): void
     {
         $seaLevel = 64;

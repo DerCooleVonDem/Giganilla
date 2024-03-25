@@ -43,8 +43,12 @@ class GigaRandom {
         return $this->nextSignedInt() & 0x7fffffff;
     }
 
-    public function nextIntWithBound(int $bound): int {
-        return $this->nextInt() % $bound;
+    public function nextIntWithBound(int|float $bound): int {
+        $intBound = round($bound);
+
+        if($intBound == 0) return 0;
+
+        return $this->nextInt() % (int)$bound;
     }
 
     public function nextFloat(): float {

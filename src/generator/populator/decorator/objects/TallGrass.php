@@ -3,6 +3,7 @@
 namespace JonasWindmann\Giganilla\generator\populator\decorator\objects;
 
 use JonasWindmann\Giganilla\GigaRandom;
+use pocketmine\block\Block;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\ChunkManager;
 
@@ -17,7 +18,7 @@ class TallGrass extends TerrainObjects {
         $currentBlock = $world->getBlockAt($sourceX, $sourceY, $sourceZ);
         while (($currentBlock->hasSameTypeId(VanillaBlocks::AIR()) || $currentBlock->hasSameTypeId(VanillaBlocks::JUNGLE_LEAVES())) && $sourceY > 0) {
             --$sourceY;
-            $currentBlock = $world->getBlockAt($sourceX, $sourceY, $sourceZ)->getTypeId();
+            $currentBlock = $world->getBlockAt($sourceX, $sourceY, $sourceZ);
         }
         ++$sourceY;
 

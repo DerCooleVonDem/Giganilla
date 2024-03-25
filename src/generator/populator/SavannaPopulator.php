@@ -3,9 +3,9 @@
 namespace JonasWindmann\Giganilla\generator\populator;
 
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\generator\populator\decorator\objects\AcaciaTree;
 use JonasWindmann\Giganilla\generator\populator\decorator\objects\GenericTree;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\world\generator\object\AcaciaTree;
 
 class SavannaPopulator extends BiomePopulator {
     private AcaciaTree $acaciaTree;

@@ -15,13 +15,13 @@ class TreeDecorator extends Decorator {
     }
 
     public function getRandomTree(GigaRandom $random): ?GenericTree {
-        $totalWeight = array_sum(array_column($this->decorations, 'weight'));
+        $totalWeight = array_sum(array_column($this->decorations, 0));
 
         $weight = $random->nextIntWithBound($totalWeight);
         foreach ($this->decorations as $deco) {
-            $weight -= $deco['weight'];
+            $weight -= $deco[0];
             if ($weight < 0) {
-                return $deco['treeObject'];
+                return $deco[1];
             }
         }
 

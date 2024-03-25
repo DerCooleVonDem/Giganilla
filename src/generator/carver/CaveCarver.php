@@ -36,7 +36,7 @@ class CaveCarver
                 $j1 = $currChunkX * $j;
                 $k1 = $currChunkZ * $k;
 
-                $this->rand->setSeed($j1 ^ $k1 ^ $random->getSeed());
+                $this->rand->setSeed((int)$j1 ^ (int)$k1 ^ $random->getSeed());
 
                 $this->recursiveGenerate($currChunkX, $currChunkZ, $chunkX, $chunkZ, $chunk, true);
             }
@@ -45,7 +45,7 @@ class CaveCarver
 
     private function recursiveGenerate(int $chunkX, int $chunkZ, int $originalChunkX, int $originalChunkZ, Chunk $chunk, bool $addRooms)
     {
-        $numAttempts = $this->rand->nextIntWithBound($this->rand->nextInt($this->rand->nextInt(15) + 1) + 1);
+        $numAttempts = $this->rand->nextIntWithBound($this->rand->nextIntWithBound($this->rand->nextIntWithBound(15) + 1) + 1);
 
         if ($this->rand->nextIntWithBound(100) > self::DENSITY) {
             $numAttempts = 0;

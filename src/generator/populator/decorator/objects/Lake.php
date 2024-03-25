@@ -61,7 +61,7 @@ class Lake extends TerrainObjects {
         $subChunk = $chunk->getSubChunk($sourceY >> 4);
         $biomeArray = $subChunk->getBiomeArray();
 
-        $biome = $biomeArray->get(($sourceX + 8 + self::LAKE_MAX_DIAMETER / 2) & 0x0f, ($sourceZ + 8 + self::LAKE_MAX_DIAMETER / 2) & 0x0f);
+        $biome = $biomeArray->get(($sourceX + 8 + self::LAKE_MAX_DIAMETER / 2) & 0x0f, 0, ($sourceZ + 8 + self::LAKE_MAX_DIAMETER / 2) & 0x0f);
         $mycel_biome = $biome == BiomeList::MUSHROOM_SHORE;
 
         $stillWater = VanillaBlocks::WATER()->getStillForm();
@@ -90,7 +90,7 @@ class Lake extends TerrainObjects {
                             $replaceType = $block;
                         }
                     } elseif ($y == (self::LAKE_MAX_HEIGHT / 2 - 1)) {
-                        $biome = $biomeArray->get($x & 0x0f, $z & 0x0f);
+                        $biome = $biomeArray->get($x & 0x0f, 0, $z & 0x0f);
 
                         // StateId does make sence here because still water is a subform of the water block
                         //                   V                            V

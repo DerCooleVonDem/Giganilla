@@ -43,7 +43,7 @@ class GenericTree extends TerrainObjects {
             for ($x = $sourceX - $radius; $x <= $sourceX + $radius; ++$x) {
                 for ($z = $sourceZ - $radius; $z <= $sourceZ + $radius; ++$z) {
                     if (abs($x - $sourceX) != $radius || abs($z - $sourceZ) != $radius || ($random->nextBoolean() && $n != 0)) {
-                        $this->replaceIfAirOrLeaves($x, $y, $z, $this->leavesTypes, $world);
+                        $this->replaceIfAirOrLeaves((int)$x, $y, (int)$z, $this->leavesTypes, $world);
                     }
                 }
             }

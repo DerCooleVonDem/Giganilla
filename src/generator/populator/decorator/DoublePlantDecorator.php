@@ -30,14 +30,14 @@ class DoublePlantDecorator extends Decorator {
     }
 
     private function getRandomDoublePlant(GigaRandom $random): ?Block {
-        $totalWeight = array_sum(array_column($this->decorations, 'weight'));
+        $totalWeight = array_sum(array_column($this->decorations, 0));
 
         $weight = $random->nextIntWithBound($totalWeight);
         foreach ($this->decorations as $deco) {
-            $weight -= $deco['weight'];
+            $weight -= $deco[0];
 
             if ($weight < 0) {
-                return $deco['block'];
+                return $deco[1];
             }
         }
 

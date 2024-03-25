@@ -36,7 +36,7 @@ class LakeDecorator extends Decorator
 
             if ($sourceY >= 5) {
                 $txn = new BlockTransaction($world);
-                $txn->addValidator(function(ChunkManager $manager, int $x, int $y, int $z){
+                $txn->addValidator(function(ChunkManager $manager, int $x, int $y, int $z): bool{
                     return !$manager->getBlockAt($x, $y, $z)->hasSameTypeId(VanillaBlocks::WATER());
                 });
 

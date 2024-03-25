@@ -59,7 +59,7 @@ class Giganilla extends Generator
     private GroundGenerator $defaultGenerator;
     private OverworldPopulator $populators;
     private array $elevationWeight;
-    private array $groundMap;
+    private array $groundMap = [];
     private SandyGroundGenerator $sandyGroundGenerator;
     private RockyGroundGenerator $rockyGroundGenerator;
     private SnowyGroundGenerator $snowyGroundGenerator;
@@ -168,11 +168,20 @@ class Giganilla extends Generator
         }
     }
 
-    public function insertGroundmap(array $biomeIds, GroundGenerator $generator): void
-    {
+    public function insertGroundmap(array $biomeIds, GroundGenerator $generator): void {
         foreach ($biomeIds as $biomeId) {
+            if (!isset($this->groundMap[$biomeId])) {
+                $this->groundMap[$biomeId] = [];
+            }
             $this->groundMap[$biomeId][] = $generator;
         }
+    }
+
+    public function accessGroundmap(int $biomeId): array {
+        if (isset($this->groundMap[$biomeId])) {
+            return $this->groundMap[$biomeId];
+        }
+        return [];
     }
 
     public function generateChunk(ChunkManager $world, int $chunkX, int $chunkZ): void
@@ -218,17 +227,11 @@ class Giganilla extends Generator
                 }
 
                 $found = false;
-                foreach ($this->groundMap as $key => $mappings) {
-                    $firstKey = array_key_first($mappings);
-                    $biomes = $mappings[$firstKey];
-                    $biomes->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
-                    //var_dump($biomes);
-                    //if (in_array($id, (array)$biomes) && $biomes[$id] !== end($biomes)) {
-                    //    $biomes[2]->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
-//
-                    //    $found = true;
-                    //    break;
-                    //}
+                $groundGenerators = $this->accessGroundmap($id);
+
+                foreach ($groundGenerators as $generator) {
+                    $generator->generateTerrainColumn($world, $this->ownRandom, $cx + $x, $cz + $z, $id, $surfaceNoise[$x | $z << 4]);
+                    $found = true;
                 }
 
                 if (!$found) {

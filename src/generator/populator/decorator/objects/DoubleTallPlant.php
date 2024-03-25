@@ -3,11 +3,13 @@
 namespace JonasWindmann\Giganilla\generator\populator\decorator\objects;
 
 use JonasWindmann\Giganilla\GigaRandom;
+use pocketmine\block\Block;
+use pocketmine\block\DoublePlant;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\ChunkManager;
 
 class DoubleTallPlant extends TerrainObjects {
-    private $species;
+    private DoublePlant $species;
 
     public function __construct($subtype) {
         $this->species = $subtype;
@@ -28,7 +30,7 @@ class DoubleTallPlant extends TerrainObjects {
                 // The first bit is a boolean, indicates that the block is a top.
                 $world->setBlockAt($x, $y, $z, $this->species);
                 // TODO: I really dont know if it is the right way to set the bit flag
-                $world->setBlockAt($x, $y + 1, $z, $this->species->setBitFlag(0x8, true));
+                $world->setBlockAt($x, $y + 1, $z, $this->species->setTop(true));
                 $placed = true;
             }
         }
