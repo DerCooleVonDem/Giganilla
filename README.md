@@ -3,7 +3,7 @@
 # Giganilla (Devbuild)
 ![](https://dcbadge.vercel.app/api/server/nhFa79HAHc?style=plastic)
 
-## THIS CODE CURRENTLY DOES NOT COMPILE! DONT DO ISSUES ABOUT MISSING IMPLEMENTATIONS!
+## This project is under development, please do not use the generator in production
 
 A vanilla-near world generator for pocketmine-mp v5. Keep in mind that this project is still under development and is not fully optimized, but further improvements are planned.
 This project is based on the NetherGamesMC ext-vanillagenerator implementation.*
