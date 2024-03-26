@@ -28,8 +28,8 @@ class TaigaPopulator extends BiomePopulator {
         ]);
         $this->treeDecorator->setAmount(10);
         $this->treeDecorator->setTrees([
-            [2, RedwoodTree::class],
-            [1, TallRedwoodTree::class]
+            [2, new RedwoodTree()],
+            [1, new TallRedwoodTree()]
         ]);
         $this->tallGrassDecorator->setDensity(0.8);
         $this->deadBushDecorator->setAmount(1);

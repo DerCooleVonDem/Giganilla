@@ -31,9 +31,11 @@ class TreeDecorator extends Decorator {
     public function decorate(ChunkManager $world, GigaRandom $random, int $chunkX, int $chunkZ): void {
         $chunk = $world->getChunk($chunkX, $chunkZ);
 
-        $sourceX = ($chunkX << 4) + $random->nextIntWithBound(16);
-        $sourceZ = ($chunkZ << 4) + $random->nextIntWithBound(16);
-        $sourceY = $chunk->getHighestBlockAt($sourceX & 0x0f, $sourceZ & 0x0f);
+        $rx = $random->nextIntWithBound(16);
+        $rz = $random->nextIntWithBound(16);
+        $sourceX = ($chunkX << 4) + $rx;
+        $sourceZ = ($chunkZ << 4) + $rz;
+        $sourceY = $chunk->getHighestBlockAt($rx, $rz);
 
         $tree = $this->getRandomTree($random);
         if ($tree !== null) {
@@ -41,7 +43,7 @@ class TreeDecorator extends Decorator {
             $tree->initialize($random, $txn);
 
             if ($tree->generate($world, $random, $sourceX, $sourceY, $sourceZ)) {
-                $txn->apply();
+                //$txn->apply();
             }
         }
     }

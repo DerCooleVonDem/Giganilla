@@ -31,33 +31,31 @@ class GenericTree extends TerrainObjects {
 
     public function generate(ChunkManager $world, GigaRandom $random, int $sourceX, int $sourceY, int $sourceZ): bool
     {
-        if (!$this->cannotGenerateAt($sourceX, $sourceY, $sourceZ, $world)) {
-            return false;
-        }
+        if ($this->canGenerateAt($sourceX, $sourceY, $sourceZ, $world)) {
+            // Generate the leaves
+            for ($y = $sourceY + $this->height - 3; $y <= $sourceY + $this->height; ++$y) {
+                $n = $y - ($sourceY + $this->height);
+                $radius = 1 - $n / 2;
 
-        // Generate the leaves
-        for ($y = $sourceY + $this->height - 3; $y <= $sourceY + $this->height; ++$y) {
-            $n = $y - ($sourceY + $this->height);
-            $radius = 1 - $n / 2;
-
-            for ($x = $sourceX - $radius; $x <= $sourceX + $radius; ++$x) {
-                for ($z = $sourceZ - $radius; $z <= $sourceZ + $radius; ++$z) {
-                    if (abs($x - $sourceX) != $radius || abs($z - $sourceZ) != $radius || ($random->nextBoolean() && $n != 0)) {
-                        $this->replaceIfAirOrLeaves((int)$x, $y, (int)$z, $this->leavesTypes, $world);
+                for ($x = $sourceX - $radius; $x <= $sourceX + $radius; ++$x) {
+                    for ($z = $sourceZ - $radius; $z <= $sourceZ + $radius; ++$z) {
+                        if (abs($x - $sourceX) != $radius || abs($z - $sourceZ) != $radius || ($random->nextBoolean() && $n != 0)) {
+                            $this->replaceIfAirOrLeaves((int)$x, $y, (int)$z, $this->leavesTypes, $world);
+                        }
                     }
                 }
             }
+            // Generate the trunk
+            for ($y = 0; $y < $this->height; ++$y) {
+                $this->replaceIfAirOrLeaves($sourceX, $sourceY + $y, $sourceZ, $this->logType, $world);
+            }
+
+            // Block below trunk is always dirt
+            $this->transaction->addBlockAt($sourceX, $sourceY - 1, $sourceZ, VanillaBlocks::DIRT());
+
+            return true;
         }
-
-        // Generate the trunk
-        for ($y = 0; $y < $this->height; ++$y) {
-            $this->replaceIfAirOrLeaves($sourceX, $sourceY + $y, $sourceZ, $this->logType, $world);
-        }
-
-        // Block below trunk is always dirt
-        $this->transaction->addBlockAt($sourceX, $sourceY - 1, $sourceZ, VanillaBlocks::DIRT());
-
-        return true;
+        return false;
     }
 
     public function canHeightFit(int $baseHeight): bool
@@ -96,12 +94,12 @@ class GenericTree extends TerrainObjects {
 
     public function canPlaceOn(Block $soil): bool
     {
-        return $soil->hasSameTypeId(VanillaBlocks::GRASS()) || $soil->hasSameTypeId(VanillaBlocks::DIRT()) || $soil->hasSameTypeId(VanillaBlocks::FARMLAND());
+        return $soil->hasSameTypeId(VanillaBlocks::GRASS()) || $soil->hasSameTypeId(VanillaBlocks::FARMLAND());
     }
 
-    public function cannotGenerateAt(int $baseX, int $baseY, int $baseZ, ChunkManager $world): bool
+    public function canGenerateAt(int $baseX, int $baseY, int $baseZ, ChunkManager $world): bool
     {
-        return !$this->canHeightFit($baseY) || !$this->canPlaceOn($world->getBlockAt($baseX, $baseY - 1, $baseZ)) || !$this->canPlace($baseX, $baseY, $baseZ, $world);
+        return $this->canHeightFit($baseY) || $this->canPlaceOn($world->getBlockAt($baseX, $baseY - 1, $baseZ)) || $this->canPlace($baseX, $baseY, $baseZ, $world);
     }
 
     public function initialize(GigaRandom $random, BlockTransaction $txn): void

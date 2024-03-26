@@ -5,6 +5,7 @@ namespace JonasWindmann\Giganilla\generator;
 use JonasWindmann\Giganilla\biome\BiomeClimate;
 use JonasWindmann\Giganilla\biome\BiomeHeightManager;
 use JonasWindmann\Giganilla\biome\BiomeList;
+use JonasWindmann\Giganilla\dev\PerformanceUtility;
 use JonasWindmann\Giganilla\generator\biomegrid\MapLayer;
 use JonasWindmann\Giganilla\generator\biomegrid\MapLayerPair;
 use JonasWindmann\Giganilla\generator\biomegrid\VanillaBiomeGrid;
@@ -50,7 +51,7 @@ class Giganilla extends Generator
     const DENSITY_FILL_SEA_MODE = 0;
     const DENSITY_FILL_OFFSET = 0.0;
 
-    const IS_UHC = false; // TODO: Remove later bc this is just debug!
+    const IS_UHC = true; // TODO: Remove later bc this is just debug!
 
     private bool $isUHC;
     private MapLayerPair $mapLayer;
@@ -75,6 +76,8 @@ class Giganilla extends Generator
 
     public function __construct(int $seed, string $preset)
     {
+        PerformanceUtility::getInstance()->startMeasurement("generator-initiation");
+
         parent::__construct($seed, $preset);
 
         // Ground generators
@@ -166,6 +169,9 @@ class Giganilla extends Generator
                 $this->elevationWeight[$this->ElevationWeightHash($x, $z)] = $value;
             }
         }
+
+        PerformanceUtility::getInstance()->stopMeasurement("generator-initiation");
+        PerformanceUtility::getInstance()->sendMeasurementsToSocket();
     }
 
     public function insertGroundmap(array $biomeIds, GroundGenerator $generator): void {
@@ -186,20 +192,28 @@ class Giganilla extends Generator
 
     public function generateChunk(ChunkManager $world, int $chunkX, int $chunkZ): void
     {
+        PerformanceUtility::getInstance()->startMeasurement("chunk-generation");
         $read = $this->mapLayer->highResolution->generateValues($chunkX * 16, $chunkZ * 16, 16, 16);
 
         $this->generateChunkData($world, $chunkX, $chunkZ, new VanillaBiomeGrid($read));
 
+        PerformanceUtility::getInstance()->startMeasurement("cave-generation");
         $this->caveGenerator->generate($world, $this->ownRandom, $chunkX, $chunkZ, $world->getChunk($chunkX, $chunkZ));
+        PerformanceUtility::getInstance()->stopMeasurement("cave-generation");
+        PerformanceUtility::getInstance()->stopMeasurement("chunk-generation");
     }
 
     public function populateChunk(ChunkManager $world, int $chunkX, int $chunkZ): void
     {
+        PerformanceUtility::getInstance()->startMeasurement("chunk-population");
         $this->populators->Populate($world, $this->ownRandom, $chunkX, $chunkZ);
+        PerformanceUtility::getInstance()->stopMeasurement("chunk-population");
+        PerformanceUtility::getInstance()->sendMeasurementsToSocket();
     }
 
     private function GenerateChunkData(ChunkManager $world, int $chunkX, int $chunkZ, VanillaBiomeGrid $biome): void
     {
+        PerformanceUtility::getInstance()->startMeasurement("chunk-data-generation");
         $this->generateRawTerrain($world, $chunkX, $chunkZ);
 
         $cx = $chunkX << 4;
@@ -239,10 +253,14 @@ class Giganilla extends Generator
                 }
             }
         }
+        PerformanceUtility::getInstance()->stopMeasurement("chunk-data-generation");
     }
 
     private function GenerateRawTerrain(ChunkManager $world, int $chunkX, int $chunkZ): void{
+        PerformanceUtility::getInstance()->startMeasurement("raw-terrain-generation");
+        PerformanceUtility::getInstance()->startMeasurement("generate-terrain-density");
         $density = $this->generateTerrainDensity($chunkX, $chunkZ);
+        PerformanceUtility::getInstance()->stopMeasurement("generate-terrain-density");
 
         $seaLevel = 64;
 
@@ -312,6 +330,8 @@ class Giganilla extends Generator
                 }
             }
         }
+
+        PerformanceUtility::getInstance()->stopMeasurement("raw-terrain-generation");
     }
 
     private function GenerateTerrainDensity(int $x, int $z): array

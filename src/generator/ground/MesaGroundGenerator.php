@@ -13,7 +13,7 @@ use pocketmine\world\World;
 class MesaGroundGenerator extends GroundGenerator
 {
     private MesaType $type;
-    private int $seed;
+    private int $seed = 0;
     private GigaRandom $random;
 
     const COLOUR_LAYER_SIZE = 64;
@@ -24,6 +24,7 @@ class MesaGroundGenerator extends GroundGenerator
 
     public function __construct(MesaType $type)
     {
+        parent::__construct();
         $this->random = new GigaRandom(0); // See regarding: https://github.com/NetherGamesMC/ext-vanillagenerator/blob/abd059fd2ca79888aab3b9c5070d83ceea55fada/lib/generator/ground/MesaGroundGenerator.h#L30
                                                  // and https://github.com/NetherGamesMC/ext-vanillagenerator/blob/abd059fd2ca79888aab3b9c5070d83ceea55fada/lib/generator/ground/MesaGroundGenerator.h#L35
 
@@ -45,12 +46,10 @@ class MesaGroundGenerator extends GroundGenerator
 
     public function Initialize(int $seed): void
     {
-        if ($seed != $this->seed) {
-            $this->seed = $seed;
-            $this->random = new GigaRandom($seed);
+        $this->seed = $seed;
+        $this->random = new GigaRandom($seed);
 
-            $this->InitializeColorLayers($this->random);
-        }
+        $this->InitializeColorLayers($this->random);
     }
 
     public function InitializeColorLayers(GigaRandom $random): void
@@ -61,7 +60,7 @@ class MesaGroundGenerator extends GroundGenerator
         while ($i < count($this->colourLayer)) {
             $i += $random->NextIntWithBound(5) + 1;
             if ($i < count($this->colourLayer)) {
-                $this->colourLayer[$i++] = 1; // orange
+                $this->colourLayer[$i++] = DyeColor::ORANGE(); // orange
             }
         }
 
@@ -77,9 +76,9 @@ class MesaGroundGenerator extends GroundGenerator
             }
 
             if ($random->NextIntWithBound(2) == 0 || $j < count($this->colourLayer) - 1 && $random->NextIntWithBound(2) == 0) {
-                $this->colourLayer[$j - 1] = 8; // light gray
+                $this->colourLayer[$j - 1] = DyeColor::LIGHT_GRAY(); // light gray
             } else {
-                $this->colourLayer[$j] = 0; // white
+                $this->colourLayer[$j] = DyeColor::WHITE(); // white
             }
         }
     }
@@ -177,7 +176,7 @@ class MesaGroundGenerator extends GroundGenerator
                                 $world->SetBlockAt($x, $y, $z, $topMat);
                             } elseif ($y > $seaLevel + 2 + $surfaceHeight) {
                                 $color = $this->colourLayer[(($y + (int) round($this->colorNoise->Noise($chunkX, $chunkZ, 0, 0.5, 2.0, false) * 2.0)) % 64)];
-                                $this->SetColoredGroundLayer($world, $x, $y, $z, $y < $seaLevel || $y > 128 ? 1 : ($colored ? $color : -1));
+                                $this->SetColoredGroundLayer($world, $x, $y, $z, $y < $seaLevel || $y > 128 ? 1 : ($colored ? ($color == -1 ? DyeColor::RED() : $color ) : DyeColor::RED()));
                             } else {
                                 $world->SetBlockAt($x, $y, $z, $this->topMaterial);
                                 $groundSet = true;
@@ -191,7 +190,7 @@ class MesaGroundGenerator extends GroundGenerator
                             $world->SetBlockAt($x, $y, $z, $this->groundMaterial);
                         } else {
                             $color = $this->colourLayer[(($y + (int) round($this->colorNoise->Noise($chunkX, $chunkZ, 0, 0.5, 2.0, false) * 2.0)) % 64)];
-                            $this->SetColoredGroundLayer($world, $x, $y, $z, $color);
+                            $this->SetColoredGroundLayer($world, $x, $y, $z, $color == -1 ? DyeColor::RED() : $color);
                         }
                     }
                 }

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace JonasWindmann\Giganilla;
 
+use JonasWindmann\Giganilla\command\GiganillaCommand;
+use JonasWindmann\Giganilla\dev\PerformanceServer;
 use JonasWindmann\Giganilla\generator\Giganilla;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 use pocketmine\world\generator\GeneratorManager;
 
 class Main extends PluginBase{
@@ -29,7 +32,8 @@ class Main extends PluginBase{
         GeneratorManager::getInstance()->addGenerator(Giganilla::class, "giganilla", fn () => null);
     }
 
-    public function onEnable(): void
+    protected function onEnable(): void
     {
+        $this->getScheduler()->scheduleRepeatingTask(new PerformanceServer(), 1);
     }
 }
